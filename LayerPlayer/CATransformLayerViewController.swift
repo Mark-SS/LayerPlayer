@@ -87,34 +87,38 @@ class CATransformLayerViewController: UIViewController {
   
   // MARK: - Triggered actions
   
-  override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
-    if let location = touches.anyObject()?.locationInView(viewForTransformLayer) {
-      if trackBall != nil {
-        trackBall?.setStartPointFromLocation(location)
-      } else {
-        trackBall = TrackBall(location: location, inRect: viewForTransformLayer.bounds)
-      }
-      
-      for layer in transformLayer.sublayers {
-        if let hitLayer = layer.hitTest(location) {
-          showBoxTappedLabel()
-          break
+  override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+    if let touch = touches.first as? UITouch {
+        let location = touch.locationInView(viewForTransformLayer)
+        if trackBall != nil {
+            trackBall?.setStartPointFromLocation(location)
+        } else {
+            trackBall = TrackBall(location: location, inRect: viewForTransformLayer.bounds)
         }
-      }
+        
+        for layer in transformLayer.sublayers {
+            if let hitLayer = layer.hitTest(location) {
+                showBoxTappedLabel()
+                break
+            }
+        }
+
     }
   }
   
-  override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
-    if let location = touches.anyObject()?.locationInView(viewForTransformLayer) {
-      if let transform = trackBall?.rotationTransformForLocation(location) {
-        viewForTransformLayer.layer.sublayerTransform = transform
-      }
+  override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+    if let touch = touches.first as? UITouch {
+        let location = touch.locationInView(viewForTransformLayer)
+        if let transform = trackBall?.rotationTransformForLocation(location) {
+            viewForTransformLayer.layer.sublayerTransform = transform
+        }
     }
   }
   
-  override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
-    if let location = touches.anyObject()?.locationInView(viewForTransformLayer) {
-      trackBall?.finalizeTrackBallForLocation(location)
+  override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+    if let touch = touches.first as? UITouch {
+        let location = touch.locationInView(viewForTransformLayer)
+        trackBall?.finalizeTrackBallForLocation(location)
     }
   }
   
